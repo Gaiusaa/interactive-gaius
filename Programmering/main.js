@@ -20,7 +20,7 @@ let currentLine = 0; // Which line the dialogue is on
 let dayComplete = false; // Determiner for loop which controls the logic for the day
 let waiting = false; // Holds functions in check while waiting
 let eventToBeChosen;
-let specialEvent = "takeout"; // The current special event of the day
+let specialEvent = "friend"; // The current special event of the day
 let specialTextTime = 5000; // How long text regarding the special event is displayed
 let currentDay = "monday"; // Tracks the current day
 let currentApartment = "apartment1" // Which apartment graphic should be used later in the story
@@ -86,7 +86,7 @@ let events = { // Functions for all events in the story
                     specialEvent = "health";
                     break;
                 default:
-                    specialEvent = "takeout";
+                    events["health"]();
             }
 
             health -= 15;
@@ -297,17 +297,18 @@ let events = { // Functions for all events in the story
 
             if (health >= requirements["standup"]) {
                 health += 5;
-                eventFunction("Your mental health and confidence is high enough and you had talked with the person", "Striking up the conversation was challenging, but you pushed through and had fun. Eventually exchanging contacts");
+                eventFunction("Your mental health and confidence is high enough and you had talked with the person", "Striking up the conversation was challenging, but you pushed through and had fun. Eventually exchanging contacts", true);
             } else {
                 health -= 5;
-                eventFunction("Unfortunately, you did not have it in you to go through with this", "They noticed you were anxious and tried to calm you down, but you could not take it and left quickly");
+                eventFunction("Unfortunately, you did not have it in you to go through with this", "They noticed you were anxious and tried to calm you down, but you could not take it and left quickly", true);
             }
         } else {
             health -= 5;
-            eventFunction("You decided to not strike up a conversation at the cafe", "Instead, you binge-watched a new show you recently found online");
+            eventFunction("You decided to not strike up a conversation at the cafe", "Instead, you binge-watched a new show you recently found online", true);
         }
     },
     "health": function() {
+        console.log("Health function");
         canPrompt = false;
         objects.blackout.style.opacity = 100
         currentDialogue = "bedroom";
@@ -316,10 +317,10 @@ let events = { // Functions for all events in the story
 
         objects.blackoutText.innerHTML = "You are standing in front of the mirror in your bathroom, reflecting on the past week"
 
-        if (health >= requirements["standup"]) {
+        if (health >= requirements["health"]) {
             eventFunction("You consider the past week to have been a great experience for you, coming out of your shelf", "You leave the bathroom with a smile on your face, you feel more confident than ever and ready for the future", true);
         } else {
-            eventFunction("Staring into your soul, you think of everything that has happened with a bitter taste in your mouth", "You try to convince yourself that this has been a good week, with a lot of progress. But you cannot shake off the feeling of more anxiety washing over you", true);
+            eventFunction("Staring into the mirror, you think of everything that has happened with a bitter taste in your mouth", "You try to convince yourself that this has been a good week, with a lot of progress. But you cannot shake off the feeling of more anxiety washing over you", true);
         }
     },
 };
@@ -498,12 +499,12 @@ function eventFunction(...lines) { // Handles the visual in soecial events
         setTimeout(function() {
             objects.blackoutText.innerHTML = lines[1]
             setTimeout(function() {
-                curtains("bedroom");
-                if (lines[3] && lines[3] === true) {
-                    setTimeout(function() {
-                        events["health"];
-                    }, specialTextTime);
-                }
+                if (specialEvent === "health") {
+                    console.log("The end");
+                    events["health"]();
+                } else {
+                    curtains("bedroom");
+                }           
                 objects.blackoutText.innerHTML = ""
             }, specialTextTime);
         }, specialTextTime);
