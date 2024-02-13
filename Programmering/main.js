@@ -11,6 +11,17 @@ let objects = { // HTML Elements
     infoDiv: document.getElementById("info")
 };
 
+let audio = { // Audio Elements 
+    bedroom: document.getElementById("bedroomAudio"),
+    apartment: document.getElementById("apartmentAudio"),
+    work: document.getElementById("workAudio"),
+    outside: document.getElementById("outsideAudio"),
+    event: document.getElementById("eventAudio"),
+    good: document.getElementById("goodAudio"),
+    bad: document.getElementById("badAudio"),
+    click: document.getElementById("clickAudio")
+}; 
+
 let typeTime = 2000 // Amount of time the typewriter effect takes per line
 let health = 35; // Mental health, determines outcomes of special events. 1 - 100
 let canPrompt = true; // Determines whether or not the user can go forward with the dialogue
@@ -20,10 +31,11 @@ let currentLine = 0; // Which line the dialogue is on
 let dayComplete = false; // Determiner for loop which controls the logic for the day
 let waiting = false; // Holds functions in check while waiting
 let eventToBeChosen;
-let specialEvent = "friend"; // The current special event of the day
+let specialEvent = "takeout"; // The current special event of the day
 let specialTextTime = 5000; // How long text regarding the special event is displayed
 let currentDay = "monday"; // Tracks the current day
 let currentApartment = "apartment1" // Which apartment graphic should be used later in the story
+let currentAudio;
 
 let backgrounds = { // Directories to each background graphic
     "bedroom": "../Design/Background/Bedroom.png",
@@ -36,12 +48,6 @@ let curtainTimes = { // Time each action of the curtain function uses
     "close": 50,
     "idle": 3000,
     "open": 50
-};
-let routes = { // Routes for where the user can go while being in x location
-    "bedroom": ["apartment1", "bedroom"],
-    "apartment": ["work", "apartment2"],
-    "work": ["outside", "work"],
-    "outside": ["apartment2"],
 };
 let requirements = { // Determines the minimum mental state the user needs to complete events
     "takeout": 35,
@@ -117,7 +123,7 @@ let events = { // Functions for all events in the story
             currentLine = 0;
         } else {
             health -= 5;
-            curtains("apartment2");
+            curtains("apartment2", true);
             currentDialogue = specialEvent; // Special dialogue/function must be triggered here
             currentLine = 0;
         }
@@ -128,7 +134,7 @@ let events = { // Functions for all events in the story
             currentDialogue = "outside";
             currentLine = 0;
         } else {
-            curtains("apartment2");
+            curtains("apartment2", true);
             currentDialogue = specialEvent; // Special dialogue/function must be triggered here
             currentLine = 0;
         } 
@@ -317,9 +323,13 @@ let events = { // Functions for all events in the story
 
         objects.blackoutText.innerHTML = "You are standing in front of the mirror in your bathroom, reflecting on the past week"
 
+        audio[currentAudio].stop();
+
         if (health >= requirements["health"]) {
+            audio["good"].play();
             eventFunction("You consider the past week to have been a great experience for you, coming out of your shelf", "You leave the bathroom with a smile on your face, you feel more confident than ever and ready for the future", true);
         } else {
+            audio["bad"].play();
             eventFunction("Staring into the mirror, you think of everything that has happened with a bitter taste in your mouth", "You try to convince yourself that this has been a good week, with a lot of progress. But you cannot shake off the feeling of more anxiety washing over you", true);
         }
     },
@@ -437,7 +447,7 @@ let dialogue = { // Dialogue for each event
 };
 
 // Functions
-function typewriter(line) { // Writes the dialogue
+function typewriter(line) {
     canPrompt = false;
 
     setTimeout(function() {
@@ -445,19 +455,25 @@ function typewriter(line) { // Writes the dialogue
     }, typeTime);
 
     let words = line.split('');
-    let newLine = [];
+    let newLine = '';
     let totalTime = 0;
 
-    for (let word = 0; word < words.length; word += 1) {
+    for (let word = 0; word < words.length; word++) {
         setTimeout(function() {
-            newLine.push(words[word]);
-            objects.textBox.innerHTML = newLine.join('');
-        }, totalTime, line, word);
-        totalTime += typeTime / words.length;
+            newLine += words[word];
+            objects.textBox.innerHTML = newLine;
+            
+            // Create a new audio element for each letter
+            if (words[word] !== " ") {
+                let audioElement = new Audio();
+                audioElement.src = '../Lyd/Clicking.mp3'; // Replace 'click_sound.mp3' with the path to your clicking sound file
+                audioElement.play();
+            }
+        }, 100 * word); // Fixed interval of 500 milliseconds
     }
 }
 
-function curtains(newBackground) { // Switches from scene x to scene y 
+function curtains(newBackground, override) { // Switches from scene x to scene y 
     if (backgrounds[newBackground]) {
         canPrompt = false;
 
@@ -471,6 +487,24 @@ function curtains(newBackground) { // Switches from scene x to scene y
             }, curtainTimes["close"] * (trans / 5));
         }
         setTimeout(function() {
+            if (override && override === true) {
+                audio[currentAudio].pause();
+                audio["event"].play();
+                currentAudio = "event";
+            } else {
+                if (audio[currentAudio]) {
+                    audio[currentAudio].pause();
+                }
+    
+                if (newBackground === "apartment1" || newBackground === "apartment2") {
+                    audio["apartment"].play();
+                    currentAudio = "apartment";
+                } else {
+                    audio[newBackground].play();
+                    currentAudio = newBackground;
+                }
+            }
+
             objects.box.style.backgroundImage = `url("${backgrounds[newBackground]}")`;
 
             for (let trans = 100; trans >= 0; trans -= 1) {
@@ -482,7 +516,7 @@ function curtains(newBackground) { // Switches from scene x to scene y
     }
 }
 
-function makeChoice(text, event) { // Lets the user make a choice
+function makeChoice(text) { // Lets the user make a choice
     canPrompt = false;
     canChoose = true;
 
@@ -511,7 +545,8 @@ function eventFunction(...lines) { // Handles the visual in soecial events
     }, specialTextTime);
 }
 
-function day(event) { // Starts the story
+function day() { // Starts the story
+    curtains("bedroom")
     typewriter(dialogue[currentDialogue][currentLine])
     currentLine += 1
 }
@@ -570,7 +605,7 @@ objects.continueButton.addEventListener("click", function() { // User continues 
                             eventToBeChosen = "outside";
                             break;
                         case "outside" || "outside2":
-                            curtains(currentApartment);
+                            curtains(currentApartment, true);
                             currentDialogue = specialEvent;
                             currentLine = 0;
                             break;
@@ -603,7 +638,7 @@ objects.continueButton.addEventListener("click", function() { // User continues 
                             eventToBeChosen = "friend"
                             break;
                         default: // Safety net for special events, unable to make proper logic
-                            curtains(currentApartment);
+                            curtains(currentApartment, true);
                             currentDialogue = specialEvent;
                             currentLine = 0;
                     }

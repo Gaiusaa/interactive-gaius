@@ -67,7 +67,7 @@ body {
 
     position: absolute;
     top: 50%;
-    left: 57.5%;
+    left: 50%;
     transform: translate(-50%, -50%);
     background-color: black;
 
@@ -280,4 +280,197 @@ body {
 
 #getInfo:hover {
     color: yellow;
+}
+
+/* Media Queries */
+
+/* Computer Screens */
+@media only screen and (max-width: 1920px) and (max-height: 1080px) {
+    #general {
+        font-size: 125%;
+    }
+}
+
+@media only screen and (max-width: 1366px) and (max-height: 768px) {
+    #box {
+        height: 90vh;
+    }
+
+    #general {
+        font-size: 90%;
+    }
+
+    #choiceBox {
+        font-size: 125%;
+    }
+}
+
+@media only screen and (max-width: 1440px) and (max-height: 900px) {
+    #box {
+        height: 70vh;
+    }
+
+    #general {
+        font-size: 100%;
+    }
+
+    #getInfo {
+        height: 6%;
+    }
+
+    #choiceBox {
+        font-size: 125%;
+    }
+}
+
+@media only screen and (max-width: 1280px) and (max-height: 720px) {
+    #box {
+        height: 80vh;
+    }
+
+    #general {
+        font-size: 87.5%;
+    }
+
+    #getInfo {
+        height: 6%;
+        font-size: 150%;
+    }
+
+    #messageContent {
+        font-size: 125%;
+    }
+}
+
+/* Phones (rotated) */
+@media only screen and (max-width: 800px) and (max-height: 360px) {
+    #box {
+        height: 100vh;
+    }
+
+    #general {
+        font-size: 50%;
+    }
+
+    #getInfo {
+        height: 6%;
+        font-size: 100%;
+    }
+
+    #title {
+        font-size: 65%;
+    }
+
+    #messageContent {
+        font-size: 100%;
+    }
+
+    #continue {
+        font-size: 55%;
+    }
+
+    #continue:hover {
+        color: yellow;
+        font-size: 65%;
+    }
+
+    #choiceBox {
+        font-size: 80%;
+    }
+
+    #yes {
+        font-size: 80%;
+    }
+    
+    #no {
+        font-size: 80%;
+    }
+}
+
+@media only screen and (max-width: 844px) and (max-height: 390px) {
+    #box {
+        height: 95vh;
+    }
+
+    #general {
+        font-size: 50%;
+    }
+
+    #getInfo {
+        height: 6%;
+        font-size: 100%;
+    }
+
+    #title {
+        font-size: 65%;
+    }
+
+    #messageContent {
+        font-size: 100%;
+    }
+
+    #continue {
+        font-size: 55%;
+    }
+
+    #continue:hover {
+        color: yellow;
+        font-size: 65%;
+    }
+
+    #choiceBox {
+        font-size: 85%;
+    }
+
+    #yes {
+        font-size: 80%;
+    }
+    
+    #no {
+        font-size: 80%;
+    }
+}
+
+@media only screen and (max-width: 896px) and (max-height: 414px) {
+    #box {
+        height: 95vh;
+    }
+
+    #general {
+        font-size: 50%;
+    }
+
+    #getInfo {
+        height: 6%;
+        font-size: 100%;
+    }
+
+    #title {
+        font-size: 65%;
+    }
+
+    #messageContent {
+        font-size: 100%;
+    }
+
+    #continue {
+        font-size: 55%;
+    }
+
+    #continue:hover {
+        color: yellow;
+        font-size: 65%;
+    }
+
+    #choiceBox {
+        font-size: 85%;
+    }
+
+    #yes {
+        font-size: 80%;
+    }
+    
+    #no {
+        font-size: 80%;
+    } 
 }
