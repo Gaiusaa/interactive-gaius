@@ -1,25 +1,25 @@
 // Variables
 let objects = { // HTML Elements
-    box: document.getElementById("box"),
-    textBox: document.getElementById("messageContent"),
-    choiceBox: document.getElementById("choiceBox"),
-    blackout: document.getElementById("blackout"),
-    blackoutText: document.getElementById("blackoutText"),
-    continueButton: document.getElementById("continue"),
-    yesButton: document.getElementById("yes"),
-    noButton: document.getElementById("no"),
-    infoDiv: document.getElementById("info")
+    box: document.querySelector("#box"),
+    textBox: document.querySelector("#messageContent"),
+    choiceBox: document.querySelector("#choiceBox"),
+    blackout: document.querySelector("#blackout"),
+    blackoutText: document.querySelector("#blackoutText"),
+    continueButton: document.querySelector("#continue"),
+    yesButton: document.querySelector("#yes"),
+    noButton: document.querySelector("#no"),
+    infoDiv: document.querySelector("#info")
 };
 
 let audio = { // Audio Elements 
-    bedroom: document.getElementById("bedroomAudio"),
-    apartment: document.getElementById("apartmentAudio"),
-    work: document.getElementById("workAudio"),
-    outside: document.getElementById("outsideAudio"),
-    event: document.getElementById("eventAudio"),
-    good: document.getElementById("goodAudio"),
-    bad: document.getElementById("badAudio"),
-    click: document.getElementById("clickAudio")
+    bedroom: document.querySelector("#bedroomAudio"),
+    apartment: document.querySelector("#apartmentAudio"),
+    work: document.querySelector("#workAudio"),
+    outside: document.querySelector("#outsideAudio"),
+    event: document.querySelector("#eventAudio"),
+    good: document.querySelector("#goodAudio"),
+    bad: document.querySelector("#badAudio"),
+    click: document.querySelector("#clickAudio")
 }; 
 
 let typeTime = 2000 // Amount of time the typewriter effect takes per line
@@ -72,24 +72,31 @@ let events = { // Functions for all events in the story
             switch(value) {
                 case "takeout":
                     specialEvent = "party";
+                    currentDay = "tuesday";
                     break;
                 case "party":
                     specialEvent = "appointment";
+                    currentDay = "wednesday";
                      break;
                 case "appointment":
                     specialEvent = "church";
+                    currentDay = "thursday";
                     break;
                 case "church":
                     specialEvent = "shopping";
+                    currentDay = "friday";
                     break;
                 case "shopping":
                     specialEvent = "standup";
+                    currentDay = "saturday";
                     break;
                 case "standup":
                     specialEvent = "friend";
+                    currentDay = "sunday";
                     break;
                 case "friend":
                     specialEvent = "health";
+                    currentDay = "monday";
                     break;
                 default:
                     events["health"]();
@@ -338,7 +345,6 @@ let dialogue = { // Dialogue for each event
     "bedroom": [
         "...",
         "Yet another day, eh?",
-        `Yet another ${currentDay}...`,
         "Same old stuff, I reckon",
         "Got things to do today... But at the same time...",
     ],
@@ -463,13 +469,12 @@ function typewriter(line) {
             newLine += words[word];
             objects.textBox.innerHTML = newLine;
             
-            // Create a new audio element for each letter
             if (words[word] !== " ") {
                 let audioElement = new Audio();
-                audioElement.src = '../Lyd/Clicking.mp3'; // Replace 'click_sound.mp3' with the path to your clicking sound file
+                audioElement.src = '../Lyd/Clicking.mp3';
                 audioElement.play();
             }
-        }, 100 * word); // Fixed interval of 500 milliseconds
+        }, 100 * word);
     }
 }
 
